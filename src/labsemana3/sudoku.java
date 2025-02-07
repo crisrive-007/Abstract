@@ -34,16 +34,17 @@ public class sudoku {
         frame.setLayout(new BorderLayout());
 
         JPanel panel = new JPanel(new GridLayout(9, 9));
-        for (int row = 0; row < 9; row++) {
-            for (int col = 0; col < 9; col++) {
+        for (int fila = 0; fila < 9; fila++) {
+            for (int columna = 0; columna < 9; columna++) {
                 JTextField field = new JTextField();
                 field.setHorizontalAlignment(JTextField.CENTER);
-                if (board[row][col] != 0) {
-                    field.setText(String.valueOf(board[row][col]));
+                if (board[fila][columna] != 0) {
+                    field.setText(String.valueOf(board[fila][columna]));
                     field.setEditable(false);
-                    field.setBackground(Color.LIGHT_GRAY);
+                    field.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
                 }
-                fields[row][col] = field;
+                
+                fields[fila][columna] = field;
                 panel.add(field);
             }
         }
