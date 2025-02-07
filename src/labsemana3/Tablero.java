@@ -3,11 +3,10 @@ package labsemana3;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class Tablero {
 
-    private final int[][][] boards = {
+    private final int[][][] casillas = {
         {
             {5, 3, 0, 0, 7, 0, 0, 0, 0},
             {6, 0, 0, 1, 9, 5, 0, 0, 0},
@@ -29,75 +28,107 @@ public class Tablero {
             {0, 6, 0, 5, 0, 0, 0, 0, 9},
             {0, 0, 4, 0, 0, 0, 0, 3, 0},
             {0, 0, 0, 0, 0, 9, 7, 0, 0}
-        }
+        },
         
+        {
+            {8, 0, 0, 4, 7, 3, 0, 0, 0},
+            {0, 2, 6, 8, 5, 1, 0, 9, 0},
+            {0, 0, 5, 0, 0, 0, 8, 0, 0},
+            {0, 1, 3, 0, 0, 8, 4, 0, 0},
+            {6, 0, 7, 3, 0, 2, 9, 0, 0},
+            {0, 5, 0, 0, 9, 7, 6, 0, 8},
+            {0, 6, 2, 7, 3, 0, 5, 0, 0},
+            {0, 3, 0, 2, 0, 0, 7, 0, 6},
+            {4, 0, 0, 6, 0, 0, 0, 2, 0}
+        },
+        {
+            {0, 0, 7, 9, 0, 3, 0, 6, 8},
+            {1, 0, 5, 0, 0, 0, 0, 4, 2},
+            {8, 6, 0, 2, 0, 0, 1, 9, 7},
+            {0, 0, 0, 0, 0, 5, 0, 2, 0},
+            {0, 0, 0, 7, 0, 6, 0, 0, 1},
+            {0, 2, 0, 8, 0, 1, 4, 0, 0},
+            {9, 0, 0, 0, 0, 2, 0, 3, 0},
+            {0, 7, 4, 0, 0, 8, 0, 0, 9},
+            {3, 1, 2, 4, 7, 9, 0, 0, 5}
+        },
+        
+        {
+            {0, 0, 9, 3, 8, 0, 0, 0, 7},
+            {0, 0, 0, 7 ,6, 0, 0, 0, 0},
+            {8, 2, 7, 0, 0, 0, 0, 0, 0},
+            {0, 9, 0, 0, 0, 7, 8, 3, 2},
+            {0, 0, 0, 0, 0, 4, 1, 9, 0},
+            {2, 0, 8, 9, 3, 6, 7, 4, 5},
+            {0, 0, 2, 1, 4, 5, 0, 0, 0},
+            {1, 0, 0, 0, 0, 3, 0, 2, 9},
+            {3, 7, 0, 2, 9, 0, 5, 0, 0}
+        }
+            
+            
+            
+         
     };
     
-    private int currentBoardIndex = 0; 
-    private int[][] board; 
-    private final JTextField[][] fields = new JTextField[9][9];
+    private int indexTablero = 0; 
+    private int[][] tablero; 
+    private final JTextField[][] espacios = new JTextField[9][9];
 
     public Tablero() {
-        board = boards[currentBoardIndex]; 
+        tablero = casillas[indexTablero]; 
 
-        JFrame frame = new JFrame("Sudoku");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 500);
-        frame.setLayout(new BorderLayout());
+        JFrame pantalla = new JFrame("Sudoku");
+        pantalla.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        pantalla.setSize(500, 500);
+        pantalla.setLayout(new BorderLayout());
 
         JPanel panel = new JPanel(new GridLayout(9, 9));
         for (int fila = 0; fila < 9; fila++) {
             for (int columna = 0; columna < 9; columna++) {
-                JTextField field = new JTextField();
-                field.setHorizontalAlignment(JTextField.CENTER);
-                field.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+                JTextField numero = new JTextField();
+                numero.setHorizontalAlignment(JTextField.CENTER);
+                numero.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 
                 boolean colorAlterno = ((fila / 3) + (columna / 3)) % 2 == 0;
-                field.setBackground(colorAlterno ? Color.decode("#c5e7e9") : Color.WHITE);
+                numero.setBackground(colorAlterno ? Color.decode("#c5e7e9") : Color.WHITE);
 
-                if (board[fila][columna] != 0) {
-                    field.setText(String.valueOf(board[fila][columna]));
-                    field.setFont(new Font("Segoe UI", Font.BOLD, 18));
-                    field.setEditable(false);
+                if (tablero[fila][columna] != 0) {
+                    numero.setText(String.valueOf(tablero[fila][columna]));
+                    numero.setFont(new Font("Segoe UI", Font.BOLD, 18));
+                    numero.setEditable(false);
                 }
 
-                fields[fila][columna] = field;
-                panel.add(field);
+                espacios[fila][columna] = numero;
+                panel.add(numero);
             }
         }
-        frame.add(panel, BorderLayout.CENTER);
+        pantalla.add(panel, BorderLayout.CENTER);
 
-        JButton checkButton = new JButton("Check Solution");
-        checkButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (solucionValida()) {
-                    JOptionPane.showMessageDialog(frame, "¡Sudoku completado correctamente!");
-                    loadNextBoard(); 
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Hay errores en la solución.");
-                }
+        JButton verificar = new JButton("Verificar solucion");
+        verificar.addActionListener((ActionEvent e) -> {
+            if (solucionValida()) {
+                JOptionPane.showMessageDialog(pantalla, "¡Sudoku completado correctamente!");
+                loadNextBoard();
+            } else {
+                JOptionPane.showMessageDialog(pantalla, "Hay errores en la solución.");
             }
         });
-        frame.add(checkButton, BorderLayout.SOUTH);
+        pantalla.add(verificar, BorderLayout.SOUTH);
 
-        JButton newGameButton = new JButton("Nueva Partida");
-        newGameButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loadNextBoard(); 
-            }
+        JButton nueva_partida = new JButton("Nueva Partida");
+        nueva_partida.addActionListener((ActionEvent e) -> {
+            loadNextBoard();
         });
-        frame.add(newGameButton, BorderLayout.NORTH);
+        pantalla.add(nueva_partida, BorderLayout.NORTH);
 
-        frame.setVisible(true);
+        pantalla.setVisible(true);
     }
 
     private boolean solucionValida() {
         int[][] tempBoard = new int[9][9];
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
-                String text = fields[row][col].getText();
+                String text = espacios[row][col].getText();
                 if (text.isEmpty() || !text.matches("[1-9]")) {
                     return false;
                 }
@@ -146,15 +177,17 @@ public class Tablero {
 
     
     private void loadNextBoard() {
-        currentBoardIndex = (currentBoardIndex + 1) % boards.length; // Cambiar el índice del tablero
-        board = boards[currentBoardIndex]; // Cargar el nuevo tablero
+        indexTablero = (indexTablero + 1) % casillas.length;
+        tablero = casillas[indexTablero];
 
-        //actualizar jtexts
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
-                JTextField field = fields[row][col];
-                if (board[row][col] != 0) {
-                    field.setText(String.valueOf(board[row][col]));
+                JTextField field = espacios[row][col];
+                field.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+                
+                if (tablero[row][col] != 0) {
+                    field.setText(String.valueOf(tablero[row][col]));
+                    field.setFont(new Font("Segoe UI", Font.BOLD, 18));
                     field.setEditable(false);
                 } else {
                     field.setText("");
