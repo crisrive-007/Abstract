@@ -81,6 +81,7 @@ public class Tablero {
         pantalla.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pantalla.setSize(500, 500);
         pantalla.setLayout(new BorderLayout());
+        pantalla.setLocationRelativeTo(null);
 
         JPanel panel = new JPanel(new GridLayout(9, 9));
         for (int fila = 0; fila < 9; fila++) {
@@ -97,6 +98,8 @@ public class Tablero {
                     numero.setFont(new Font("Segoe UI", Font.BOLD, 18));
                     numero.setEditable(false);
                 }
+                
+                numero.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
                 espacios[fila][columna] = numero;
                 panel.add(numero);
